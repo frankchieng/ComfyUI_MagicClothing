@@ -1,0 +1,406 @@
+{
+  "last_node_id": 29,
+  "last_link_id": 48,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "LoadImage",
+      "pos": [
+        -467,
+        178
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            42
+          ],
+          "shape": 3,
+          "label": "IMAGE"
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "049805_1.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 28,
+      "type": "OpenposePreprocessor",
+      "pos": [
+        -465.1958785843317,
+        1004.2250931175323
+      ],
+      "size": {
+        "0": 315,
+        "1": 150
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 44,
+          "label": "image",
+          "slot_index": 0
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            45,
+            48
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "POSE_KEYPOINT",
+          "type": "POSE_KEYPOINT",
+          "links": null,
+          "shape": 3,
+          "label": "POSE_KEYPOINT"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "OpenposePreprocessor"
+      },
+      "widgets_values": [
+        "enable",
+        "enable",
+        "enable",
+        512
+      ]
+    },
+    {
+      "id": 24,
+      "type": "LoadImage",
+      "pos": [
+        -484,
+        574
+      ],
+      "size": {
+        "0": 315,
+        "1": 314.0000305175781
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            43
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "solo (8).png",
+        "image"
+      ]
+    },
+    {
+      "id": 29,
+      "type": "PreviewImage",
+      "pos": [
+        -54,
+        1218
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 48,
+          "label": "images"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 26,
+      "type": "LoadImage",
+      "pos": [
+        -814,
+        983
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            44
+          ],
+          "shape": 3,
+          "label": "IMAGE"
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "07966_00.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 25,
+      "type": "MagicClothing_Generate",
+      "pos": [
+        -44,
+        574
+      ],
+      "size": [
+        444.95960060183484,
+        424.48474926328345
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "cloth_image",
+          "type": "IMAGE",
+          "link": 42,
+          "label": "cloth_image",
+          "slot_index": 0
+        },
+        {
+          "name": "face_image",
+          "type": "IMAGE",
+          "link": 43,
+          "label": "face_image",
+          "slot_index": 1
+        },
+        {
+          "name": "pose_image",
+          "type": "IMAGE",
+          "link": 45,
+          "label": "pose_image",
+          "slot_index": 2
+        },
+        {
+          "name": "cloth_mask_image",
+          "type": "IMAGE",
+          "link": null,
+          "label": "cloth_mask_image"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            46
+          ],
+          "shape": 3,
+          "label": "images",
+          "slot_index": 0
+        },
+        {
+          "name": "cloth_mask_image",
+          "type": "IMAGE",
+          "links": [
+            47
+          ],
+          "shape": 3,
+          "label": "cloth_mask_image",
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MagicClothing_Generate"
+      },
+      "widgets_values": [
+        "a photography of a woman standing in the studio",
+        "magic_clothing_768_vitonhd_joint.safetensors",
+        true,
+        1,
+        "bare, monochrome, lowres, bad anatomy, worst quality, low quality",
+        1759,
+        "randomize",
+        3,
+        3,
+        20,
+        768,
+        576,
+        "FaceID"
+      ]
+    },
+    {
+      "id": 8,
+      "type": "PreviewImage",
+      "pos": [
+        494,
+        274
+      ],
+      "size": [
+        688.1674781397742,
+        737.3524377110344
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 46,
+          "label": "images",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 16,
+      "type": "PreviewImage",
+      "pos": [
+        536,
+        1211
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 47,
+          "label": "images",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    }
+  ],
+  "links": [
+    [
+      42,
+      9,
+      0,
+      25,
+      0,
+      "IMAGE"
+    ],
+    [
+      43,
+      24,
+      0,
+      25,
+      1,
+      "IMAGE"
+    ],
+    [
+      44,
+      26,
+      0,
+      28,
+      0,
+      "IMAGE"
+    ],
+    [
+      45,
+      28,
+      0,
+      25,
+      2,
+      "IMAGE"
+    ],
+    [
+      46,
+      25,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      47,
+      25,
+      1,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      48,
+      28,
+      0,
+      29,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
