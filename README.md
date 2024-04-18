@@ -2,6 +2,8 @@
 - ✅ [2024/04/17] only cloth image with prompt generation
 - ✅ [2024/04/18] IPAdapter FaceID with human face detection and synthesize with cloth image generation
 
+You can contact with me thr twitter: FrankChieng or weixin: GalaticKing
+
 #### [the main workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/magic_clothing_workflow.json)
 ![magic_clothing](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/6a9e7d05-69c1-4c79-8769-90d876a0a031)
 
