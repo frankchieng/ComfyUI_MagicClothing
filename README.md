@@ -5,11 +5,12 @@
 
 you should run under custom_nodes directory of ComfyUI
 ```shell
-git clone https://github.com/frankchieng/ComfyUI_Aniportrait.git
+git clone https://github.com/frankchieng/ComfyUI_MagicClothing.git
 ```
 then run 
 ```shell
 pip install -r requirements.txt
 ```
 
-download the models at 🤗[Huggingface](https://huggingface.co/ShineChen1024/MagicClothing) and locating under checkpoints directory
+download the models of cloth_segm.pth and magic_clothing_768_vitonhd_joint.safetensors from 
+ 🤗[Huggingface](https://huggingface.co/ShineChen1024/MagicClothing) and place them at the checkpoints directory
