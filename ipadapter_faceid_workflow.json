@@ -1,0 +1,252 @@
+{
+  "last_node_id": 23,
+  "last_link_id": 39,
+  "nodes": [
+    {
+      "id": 9,
+      "type": "LoadImage",
+      "pos": [
+        -371,
+        322
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            34
+          ],
+          "shape": 3,
+          "label": "IMAGE"
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "cloth_1.jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 16,
+      "type": "PreviewImage",
+      "pos": [
+        726,
+        784
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 36,
+          "label": "images",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 8,
+      "type": "PreviewImage",
+      "pos": [
+        705,
+        274
+      ],
+      "size": [
+        543.233850350045,
+        423.5530004557784
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 35,
+          "label": "images",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 21,
+      "type": "MagicClothing_Generate",
+      "pos": [
+        162,
+        446
+      ],
+      "size": {
+        "0": 418.1999816894531,
+        "1": 386
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "cloth_image",
+          "type": "IMAGE",
+          "link": 34,
+          "label": "cloth_image"
+        },
+        {
+          "name": "cloth_mask_image",
+          "type": "IMAGE",
+          "link": null,
+          "label": "cloth_mask_image"
+        },
+        {
+          "name": "face_image",
+          "type": "IMAGE",
+          "link": 39,
+          "label": "face_image"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            35
+          ],
+          "shape": 3,
+          "label": "images"
+        },
+        {
+          "name": "cloth_mask_image",
+          "type": "IMAGE",
+          "links": [
+            36
+          ],
+          "shape": 3,
+          "label": "cloth_mask_image"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MagicClothing_Generate"
+      },
+      "widgets_values": [
+        "a photography of a model",
+        "magic_clothing_768_vitonhd_joint.safetensors",
+        true,
+        1,
+        "bare, monochrome, lowres, bad anatomy, worst quality, low quality",
+        1030,
+        "randomize",
+        3,
+        3,
+        20,
+        768,
+        576,
+        "FaceID"
+      ]
+    },
+    {
+      "id": 23,
+      "type": "LoadImage",
+      "pos": [
+        -373,
+        775
+      ],
+      "size": [
+        315,
+        314.00001525878906
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            39
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "solo (6).png",
+        "image"
+      ]
+    }
+  ],
+  "links": [
+    [
+      34,
+      9,
+      0,
+      21,
+      0,
+      "IMAGE"
+    ],
+    [
+      35,
+      21,
+      0,
+      8,
+      0,
+      "IMAGE"
+    ],
+    [
+      36,
+      21,
+      1,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      39,
+      23,
+      0,
+      21,
+      2,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
