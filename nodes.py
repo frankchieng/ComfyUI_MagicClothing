@@ -12,6 +12,7 @@ from .pipelines.OmsDiffusionPipeline import OmsDiffusionPipeline
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe_path = "SG161222/Realistic_Vision_V4.0_noVAE"
+faceid_version = ['FaceID', 'FaceIDPlus', 'FaceIDPlusV2']
 
 folder_paths.folder_names_and_paths["checkpoints"] = (
     [
@@ -21,6 +22,7 @@ folder_paths.folder_names_and_paths["checkpoints"] = (
 )
 
 checkpoints_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'checkpoints')
+ipadapter_faceid_path = os.path.join(checkpoints_path, 'ipadapter_faceid')
 
 def find_safetensors_files(directory):
     safetensors_files = [
@@ -42,15 +44,16 @@ class GarmentGenerate:
             },
             "optional": {
                 "num_samples": ("INT", {"default": 1, "min": 1, "max": 10, "step": 1}),
-                "n_prompt": ("STRING", {"default": "monochrome, lowres, bad anatomy, worst quality, low quality"}),
+                "n_prompt": ("STRING", {"default": "bare, monochrome, lowres, bad anatomy, worst quality, low quality"}),
                 "seed": ("INT", {"default": 42}),
                 "scale": ("FLOAT", {"default": 3.0, "min": 1.0, "max": 10.0, "step": 0.1}),
                 "cloth_guidance_scale": ("FLOAT", {"default": 3.0, "min": 1.0, "max": 10.0, "step": 0.1}),
                 "sample_steps": ("INT", {"default": 20, "min": 1, "max": 100, "step": 1}),
                 "height": ("INT", {"default": 768, "min": 256, "max": 1024, "step": 1}),
                 "width": ("INT", {"default": 576, "min": 192, "max": 768, "step": 1}),
+                "faceid_version": (faceid_version,),
                 "cloth_mask_image": ("IMAGE", ),
-                "images": ("IMAGE", ),
+                "face_image": ("IMAGE", ),
             },
         }
 
@@ -60,23 +63,64 @@ class GarmentGenerate:
     CATEGORY = "MagicClothing"
     FUNCTION = "garment_generation"
     
-    def garment_generation(self, cloth_image, prompt, model_path, enable_cloth_guidance, num_samples, n_prompt, seed, scale, cloth_guidance_scale, sample_steps, height, width, cloth_mask_image=None):
-        print(find_safetensors_files(checkpoints_path))
+    def garment_generation(self, cloth_image, prompt, model_path, enable_cloth_guidance, num_samples, n_prompt, seed, scale, cloth_guidance_scale, sample_steps, height, width, faceid_version, cloth_mask_image=None, face_image=None):
+
         vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(dtype=torch.float16)
         if enable_cloth_guidance:
             pipe = OmsDiffusionPipeline.from_pretrained(pipe_path, vae=vae, torch_dtype=torch.float16)
         else:
             pipe = StableDiffusionPipeline.from_pretrained(pipe_path, vae=vae, torch_dtype=torch.float16)
         pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-        full_net = ClothAdapter(pipe, folder_paths.get_full_path("checkpoints", model_path), device, enable_cloth_guidance)
         a_prompt = 'best quality, high quality'
         numpy_image = torch.squeeze(cloth_image, 0)
         numpy_image = (numpy_image.numpy() * 255).astype(np.uint8)
         cloth_image = Image.fromarray(numpy_image)
-        images, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, prompt, a_prompt, num_samples, n_prompt, seed, scale, cloth_guidance_scale, sample_steps, height, width)
+        #ipadapter_faceid generation
+        if face_image is not None:
+            face_image = torch.squeeze(face_image, 0)
+            face_image = (face_image.numpy() * 255).astype(np.uint8)
+            face_image = Image.fromarray(face_image)
+            if faceid_version == "FaceID":
+                ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid_sd15_lora.safetensors")
+                ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid_sd15.bin")
+                pipe.load_lora_weights(ip_lora)
+                pipe.fuse_lora()
+                from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID
+                
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("checkpoints", model_path), ip_ckpt, device, enable_cloth_guidance)
+                result = ip_model.generate(cloth_image, face_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, seed, scale, cloth_guidance_scale, sample_steps, height, width)
+            else:
+                if faceid_version == "FaceIDPlus":
+                    ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plus_sd15.bin")
+                    ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plus_sd15_lora.safetensors")
+                    v2 = False
+                else:
+                    ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plusv2_sd15.bin")
+                    ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plusv2_sd15_lora.safetensors")
+                    v2 = True
+
+                pipe.load_lora_weights(ip_lora)
+                pipe.fuse_lora()
+                image_encoder_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
+                from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus as IPAdapterFaceID
+
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("checkpoints", model_path), image_encoder_path, ip_ckpt, device, enable_cloth_guidance)
+                result = ip_model.generate(cloth_image, face_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, seed, scale, cloth_guidance_scale, sample_steps, height, width, shortcut=v2)
+                
+            if result is None:
+                raise NotImplementedError("face detection error,plz try another portrait!")
+            else:
+                images, cloth_mask_image = result
+                
+        #only cloth reference image generation
+        else:
+            full_net = ClothAdapter(pipe, folder_paths.get_full_path("checkpoints", model_path), device, enable_cloth_guidance)
+            images, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, prompt, a_prompt, num_samples, n_prompt, seed, scale, cloth_guidance_scale, sample_steps, height, width)
+        
         images = np.array(images).astype(np.float32) / 255.0
         images = torch.from_numpy(images)
         cloth_mask_image = np.array(cloth_mask_image).astype(np.float32) / 255.0
         cloth_mask_image = torch.unsqueeze(torch.from_numpy(cloth_mask_image), 0)
         return (images, cloth_mask_image)
+        
     
