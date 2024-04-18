@@ -1,7 +1,8 @@
 ### Updates:
 - ✅ [2024/04/17] only cloth image with prompt generation
 - ✅ [2024/04/18] IPAdapter FaceID with human face detection and synthesize with cloth image generation
-
+- ✅ [2024/04/18] IPAdapter FaceID with controlnet openpose and synthesize with cloth image generation
+  
 You can contact with me thr twitter: FrankChieng or weixin: GalaticKing
 
 #### [the main workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/magic_clothing_workflow.json)
@@ -9,6 +10,9 @@ You can contact with me thr twitter: FrankChieng or weixin: GalaticKing
 
 #### [IPAdapater FaceID workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/ipadapter_faceid_workflow.json)
 ![IPadapter_faceid](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/b42a8510-4076-49ea-932e-e6c8aee344f2)
+
+#### [IPAdapater FaceID chained with controlnet openpose workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/ipadapter_faceid_openpose_workflow.json)
+![IPadapter_faceid_openpose](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/3fca5f7f-f9db-410a-bc33-9f69f6442ecf)
 
 you should run under custom_nodes directory of ComfyUI
 ```shell
@@ -36,3 +40,4 @@ pip install -r requirements.txt
 |-- cloth_segm.pth
 |-- magic_clothing_768_vitonhd_joint.safetensors
 ```
+> #####  tips:If you wanna to run the controlnet openpose part,you have to install the [comfyui_controlnet_aux](https://github.com/Fannovel16/comfyui_controlnet_aux) custome code as well as download the body_pose_model.pth, facenet.pth and hand_pose_model.pth at [openpose models](https://huggingface.co/lllyasviel/Annotators) and place them in custom_nodes/comfyui_controlnet_aux/ckpts/lllyasviel/Annotators
