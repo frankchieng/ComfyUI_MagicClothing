@@ -38,7 +38,7 @@ class ClothAdapter:
         self.attn_store = {}
 
     def set_seg_model(self, ):
-        checkpoint_path = folder_paths.get_full_path("checkpoints", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
+        checkpoint_path = folder_paths.get_full_path("ckpt", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
         self.seg_net = load_seg_model(checkpoint_path, device=self.device)
 
     def set_adapter(self, unet, type):
@@ -179,7 +179,7 @@ class ClothAdapter_AnimateDiff:
         self.attn_store = {}
 
     def set_seg_model(self, ):
-        checkpoint_path = 'checkpoints/cloth_segm.pth'
+        checkpoint_path = folder_paths.get_full_path("ckpt", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
         self.seg_net = load_seg_model(checkpoint_path, device=self.device)
 
     def set_adapter(self, unet, type):

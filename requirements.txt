@@ -1,9 +1,10 @@
 insightface==0.7.3
 onnxruntime-gpu==1.17.1
-torch==2.0.1+cu118
-torchvision==0.15.2+cu118
+--extra-index-url https://download.pytorch.org/whl/cu118
+torch==2.1.1+cu118
+torchvision==0.16.1+cu118
 numpy==1.25.1 
-diffusers==0.25.1 
+diffusers==0.26.2
 opencv-python==4.9.0.80  
 transformers==4.31.0 
 safetensors==0.3.1 

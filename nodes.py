@@ -14,7 +14,7 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe_path = "SG161222/Realistic_Vision_V4.0_noVAE"
 faceid_version = ['FaceID', 'FaceIDPlus', 'FaceIDPlusV2']
 
-folder_paths.folder_names_and_paths["checkpoints"] = (
+folder_paths.folder_names_and_paths["ckpt"] = (
     [
         os.path.join(os.path.dirname(os.path.abspath(__file__)), 'checkpoints'),
     ],
@@ -82,22 +82,22 @@ class GarmentGenerate:
             face_image = (face_image.numpy() * 255).astype(np.uint8)
             face_image = Image.fromarray(face_image)
             if faceid_version == "FaceID":
-                ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid_sd15_lora.safetensors")
-                ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid_sd15.bin")
+                ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid_sd15_lora.safetensors")
+                ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid_sd15.bin")
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID
                 
-                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("checkpoints", model_path), ip_ckpt, device, enable_cloth_guidance)
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("ckpt", model_path), ip_ckpt, device, enable_cloth_guidance)
                 result = ip_model.generate(cloth_image, face_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, seed, scale, cloth_guidance_scale, sample_steps, height, width)
             else:
                 if faceid_version == "FaceIDPlus":
-                    ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plus_sd15.bin")
-                    ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plus_sd15_lora.safetensors")
+                    ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plus_sd15_lora.safetensors")
+                    ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid-plus_sd15.bin")
                     v2 = False
                 else:
-                    ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plusv2_sd15.bin")
-                    ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plusv2_sd15_lora.safetensors")
+                    ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plusv2_sd15_lora.safetensors")
+                    ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid-plusv2_sd15.bin")
                     v2 = True
 
                 pipe.load_lora_weights(ip_lora)
@@ -105,7 +105,7 @@ class GarmentGenerate:
                 image_encoder_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus as IPAdapterFaceID
 
-                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("checkpoints", model_path), image_encoder_path, ip_ckpt, device, enable_cloth_guidance)
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("ckpt", model_path), image_encoder_path, ip_ckpt, device, enable_cloth_guidance)
                 result = ip_model.generate(cloth_image, face_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, seed, scale, cloth_guidance_scale, sample_steps, height, width, shortcut=v2)
                 
             if result is None:
@@ -135,22 +135,22 @@ class GarmentGenerate:
             pose_image = Image.fromarray(pose_image)        
             
             if faceid_version == "FaceID":
-                ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid_sd15_lora.safetensors")
-                ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid_sd15.bin")
+                ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid_sd15_lora.safetensors")
+                ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid_sd15.bin")
                 pipe.load_lora_weights(ip_lora)
                 pipe.fuse_lora()
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceID
                 
-                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("checkpoints", model_path), ip_ckpt, device, enable_cloth_guidance)
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("ckpt", model_path), ip_ckpt, device, enable_cloth_guidance)
                 result = ip_model.generate(cloth_image, face_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, seed, scale, cloth_guidance_scale, sample_steps, height, width, image=pose_image)
             else:
                 if faceid_version == "FaceIDPlus":
-                    ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plus_sd15.bin")
-                    ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plus_sd15_lora.safetensors")
+                    ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plus_sd15_lora.safetensors")
+                    ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid-plus_sd15.bin")
                     v2 = False
                 else:
-                    ip_ckpt = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plusv2_sd15.bin")
-                    ip_lora = os.path.join(ipadapter_faceid_path, "ip-adapter-faceid-plusv2_sd15_lora.safetensors")
+                    ip_lora = folder_paths.get_full_path("loras", "ip-adapter-faceid-plusv2_sd15_lora.safetensors")
+                    ip_ckpt = folder_paths.get_full_path("ipadapter", "ip-adapter-faceid-plusv2_sd15.bin")
                     v2 = True
 
                 pipe.load_lora_weights(ip_lora)
@@ -158,7 +158,7 @@ class GarmentGenerate:
                 image_encoder_path = "laion/CLIP-ViT-H-14-laion2B-s32B-b79K"
                 from .garment_adapter.garment_ipadapter_faceid import IPAdapterFaceIDPlus as IPAdapterFaceID
 
-                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("checkpoints", model_path), image_encoder_path, ip_ckpt, device, enable_cloth_guidance)
+                ip_model = IPAdapterFaceID(pipe, folder_paths.get_full_path("ckpt", model_path), image_encoder_path, ip_ckpt, device, enable_cloth_guidance)
                 result = ip_model.generate(cloth_image, face_image, cloth_mask_image, prompt, a_prompt, n_prompt, num_samples, seed, scale, cloth_guidance_scale, sample_steps, height, width, shortcut=v2, image=pose_image)
                 
             if result is None:
@@ -173,7 +173,7 @@ class GarmentGenerate:
             else:
                 pipe = StableDiffusionPipeline.from_pretrained(pipe_path, vae=vae, torch_dtype=torch.float16)
             pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
-            full_net = ClothAdapter(pipe, folder_paths.get_full_path("checkpoints", model_path), device, enable_cloth_guidance)
+            full_net = ClothAdapter(pipe, folder_paths.get_full_path("ckpt", model_path), device, enable_cloth_guidance)
             images, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, prompt, a_prompt, num_samples, n_prompt, seed, scale, cloth_guidance_scale, sample_steps, height, width)
                     
         images = np.array(images).astype(np.float32) / 255.0
