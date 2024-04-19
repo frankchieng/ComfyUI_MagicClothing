@@ -19,6 +19,9 @@ You can contact with me thr twitter: FrankChieng or weixin: GalaticKing
 ![lower_body](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/39a589fb-dea1-4985-84b3-d89bf46038b1)
 ![dress](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/8204c985-5da8-4723-ba40-119da03b2df3)
 
+#### [full-body workflow with IPadapterFaceid](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/fullbody_ipadaterfaceid_workflow.json)
+![fullbody_ipadapter](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/be180181-3690-4803-a52b-47e6ee1192ab)
+
 you should run under custom_nodes directory of ComfyUI
 ```shell
 git clone https://github.com/frankchieng/ComfyUI_MagicClothing.git
