@@ -2,6 +2,7 @@
 - ✅ [2024/04/17] only cloth image with prompt generation
 - ✅ [2024/04/18] IPAdapter FaceID with human face detection and synthesize with cloth image generation
 - ✅ [2024/04/18] IPAdapter FaceID with controlnet openpose and synthesize with cloth image generation
+- ✅ [2024/04/19] lower-body and full-body models for preliminary experiment
   
 You can contact with me thr twitter: FrankChieng or weixin: GalaticKing
 
