@@ -33,13 +33,8 @@ class ClothAdapter:
 
         self.ref_unet = ref_unet.to(self.device, dtype=self.pipe.dtype)
         self.set_adapter(self.ref_unet, "read")
-        if set_seg_model:
-            self.set_seg_model()
-        self.attn_store = {}
 
-    def set_seg_model(self, ):
-        checkpoint_path = folder_paths.get_full_path("ckpt", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
-        self.seg_net = load_seg_model(checkpoint_path, device=self.device)
+        self.attn_store = {}
 
     def set_adapter(self, unet, type):
         attn_procs = {}
@@ -53,7 +48,7 @@ class ClothAdapter:
     def generate(
             self,
             cloth_image,
-            cloth_mask_image=None,
+            cloth_mask_image,
             prompt=None,
             a_prompt="best quality, high quality",
             num_images_per_prompt=4,
@@ -66,11 +61,11 @@ class ClothAdapter:
             width=384,
             **kwargs,
     ):
-        if cloth_mask_image is None:
-            cloth_mask_image = generate_mask(cloth_image, net=self.seg_net, device=self.device)
 
         cloth = prepare_image(cloth_image, height, width)
         cloth_mask = prepare_mask(cloth_mask_image, height, width)
+        print(cloth.shape)
+        print(cloth_mask.shape)
         cloth = (cloth * cloth_mask).to(self.device, dtype=torch.float16)
 
         if prompt is None:
@@ -123,7 +118,7 @@ class ClothAdapter:
     def generate_inpainting(
             self,
             cloth_image,
-            cloth_mask_image=None,
+            cloth_mask_image,
             num_images_per_prompt=4,
             seed=-1,
             cloth_guidance_scale=2.5,
@@ -132,9 +127,6 @@ class ClothAdapter:
             width=384,
             **kwargs,
     ):
-        if cloth_mask_image is None:
-            cloth_mask_image = generate_mask(cloth_image, net=self.seg_net, device=self.device)
-
         cloth = prepare_image(cloth_image, height, width)
         cloth_mask = prepare_mask(cloth_mask_image, height, width)
         cloth = (cloth * cloth_mask).to(self.device, dtype=torch.float16)
@@ -174,13 +166,7 @@ class ClothAdapter_AnimateDiff:
 
         self.ref_unet = ref_unet.to(self.device)
         self.set_adapter(self.ref_unet, "read")
-        if set_seg_model:
-            self.set_seg_model()
         self.attn_store = {}
-
-    def set_seg_model(self, ):
-        checkpoint_path = folder_paths.get_full_path("ckpt", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
-        self.seg_net = load_seg_model(checkpoint_path, device=self.device)
 
     def set_adapter(self, unet, type):
         attn_procs = {}
@@ -194,7 +180,7 @@ class ClothAdapter_AnimateDiff:
     def generate(
             self,
             cloth_image,
-            cloth_mask_image=None,
+            cloth_mask_image,
             prompt=None,
             a_prompt="best quality, high quality",
             num_images_per_prompt=4,
@@ -207,8 +193,6 @@ class ClothAdapter_AnimateDiff:
             width=384,
             **kwargs,
     ):
-        if cloth_mask_image is None:
-            cloth_mask_image = generate_mask(cloth_image, net=self.seg_net, device=self.device)
 
         cloth = prepare_image(cloth_image, height, width)
         cloth_mask = prepare_mask(cloth_mask_image, height, width)
