@@ -3,7 +3,9 @@
 - ✅ [2024/04/18] IPAdapter FaceID with human face detection and synthesize with cloth image generation
 - ✅ [2024/04/18] IPAdapter FaceID with controlnet openpose and synthesize with cloth image generation
 - ✅ [2024/04/19] lower-body and full-body models for preliminary experiment
-  
+
+U can contact me thr ![twitter_1](https://github.com/frankchieng/ComfyUI_Aniportrait/assets/130369523/27b4fcae-e50c-477d-86f4-dacf7fd052f4)[twitter](https://twitter.com/kurtqian) ![wechat_1](https://github.com/frankchieng/ComfyUI_Aniportrait/assets/130369523/b95cd0a2-4188-4eb3-b1de-5f6eeab71045) Weixin：GalaticKing
+
 #### [the main workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/magic_clothing_workflow.json)
 ![1713496499658](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/59f380c8-faf9-4544-ae57-3aa36021652c)
 
