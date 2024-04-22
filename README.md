@@ -4,9 +4,6 @@
 - ✅ [2024/04/18] IPAdapter FaceID with controlnet openpose and synthesize with cloth image generation
 - ✅ [2024/04/19] lower-body and full-body models for preliminary experiment
   
-I have routine jobs so i will continue share and update AI projects in my leisure time, so the patron will be appreciated ❤️[paypal](https://www.paypal.com/paypalme/frankchieng) Alipay QR![alipay](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/984b4def-b002-4ffb-9780-aeca290f94c3)
-
-
 #### [the main workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/magic_clothing_workflow.json)
 ![1713496499658](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/59f380c8-faf9-4544-ae57-3aa36021652c)
 
