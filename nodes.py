@@ -4,12 +4,13 @@ import torch
 import os
 import numpy as np
 from PIL import Image
-from diffusers import UniPCMultistepScheduler, AutoencoderKL, MotionAdapter, DDIMScheduler
+from diffusers import UniPCMultistepScheduler, AutoencoderKL, MotionAdapter, DDIMScheduler, ControlNetModel
 from diffusers.pipelines import StableDiffusionPipeline
 
 from .garment_adapter.garment_diffusion import ClothAdapter, ClothAdapter_AnimateDiff
 from .pipelines.OmsDiffusionPipeline import OmsDiffusionPipeline
 from .pipelines.OmsAnimateDiffusionPipeline import OmsAnimateDiffusionPipeline
+from .pipelines.VirtualTryOnPipeline import VirtualTryOnPipeline
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe_path = ["SG161222/Realistic_Vision_V4.0_noVAE", "Lykon/dreamshaper-8", "redstonehero/xxmix_9realistic_v40"]
@@ -34,6 +35,76 @@ def find_safetensors_files(directory):
     ]
     return safetensors_files
 
+def make_inpaint_condition(image, image_mask):
+    image = np.array(image.convert("RGB")).astype(np.float32) / 255.0
+    image_mask = np.array(image_mask.convert("L")).astype(np.float32) / 255.0
+    assert image.shape[0:1] == image_mask.shape[0:1], "image and image_mask must have the same image size"
+    image[image_mask > 0.5] = -1.0  # set as masked pixel
+    image = np.expand_dims(image, 0).transpose(0, 3, 1, 2)
+    image = torch.from_numpy(image)
+    return image
+    
+class ClothInpainting:
+    @classmethod
+    def INPUT_TYPES(s):
+        return {
+            "required": {
+                "cloth_image": ("IMAGE",),
+                "cloth_mask_image": ("IMAGE", ),
+                "model_path": (find_safetensors_files(checkpoints_path),),
+                "prompt": ("STRING", {"default": "a photography of a model"}),
+                "pipe_path": (pipe_path,),
+                "enable_cloth_guidance": ("BOOLEAN", {"default": True}),
+                "person_image": ("IMAGE",),
+                "person_mask": ("MASK",),
+            },
+            "optional": {
+                "num_samples": ("INT", {"default": 1, "min": 1, "max": 10, "step": 1}),
+                "negative_prompt": ("STRING", {"default": "bare, monochrome, lowres, bad anatomy, worst quality, low quality"}),
+                "seed": ("INT", {"default": 42}),
+                "guidance_scale": ("FLOAT", {"default": 5.0, "min": 1.0, "max": 10.0, "step": 0.1}),
+                "cloth_guidance_scale": ("FLOAT", {"default": 2.5, "min": 1.0, "max": 10.0, "step": 0.1}),
+                "sample_steps": ("INT", {"default": 20, "min": 1, "max": 100, "step": 1}),
+                "height": ("INT", {"default": 768, "min": 256, "max": 1024, "step": 1}),
+                "width": ("INT", {"default": 576, "min": 192, "max": 768, "step": 1}),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    RETURN_NAMES = ("images",)
+    OUTPUT_NODE = True
+    CATEGORY = "MagicClothing"
+    FUNCTION = "cloth_inpainting"
+    
+    def cloth_inpainting(self, **kwargs):    
+        control_net_inpaint = ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15_inpaint", torch_dtype=torch.float16)
+        vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(dtype=torch.float16)
+        pipe = VirtualTryOnPipeline.from_pretrained(kwargs['pipe_path'], vae=vae, controlnet=control_net_inpaint, torch_dtype=torch.float16)
+        pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
+        full_net = ClothAdapter(pipe, folder_paths.get_full_path("magic_cloth_checkpoint", kwargs['model_path']), device, kwargs['enable_cloth_guidance'], False)    
+    
+        numpy_image = torch.squeeze(kwargs['cloth_image'], 0)
+        numpy_image = (numpy_image.numpy() * 255).astype(np.uint8)
+        cloth_image = Image.fromarray(numpy_image)
+        numpy_mask_image = torch.squeeze(kwargs['cloth_mask_image'], 0)
+        numpy_mask_image = (numpy_mask_image.numpy() * 255).astype(np.uint8)
+        cloth_mask_image = Image.fromarray(numpy_mask_image)
+               
+        numpy_person_image = torch.squeeze(kwargs['person_image'], 0)
+        numpy_person_image = (numpy_person_image.numpy() * 255).astype(np.uint8)
+        person_image = Image.fromarray(numpy_person_image)
+        numpy_person_mask = torch.squeeze(kwargs['person_mask'], 0)
+        numpy_person_mask = (numpy_person_mask.numpy() * 255).astype(np.uint8)
+        person_mask = Image.fromarray(numpy_person_mask)        
+        #person_image = person_image_mask['background'].convert("RGB")
+        #person_mask = person_image_mask['layers'][0].split()[-1]
+        control_img = make_inpaint_condition(person_image,person_mask)
+        a_prompt = 'best quality, high quality'
+        images, cloth_mask_image = full_net.generate(cloth_image, cloth_mask_image, kwargs['prompt'], a_prompt, kwargs['num_samples'], kwargs['negative_prompt'], kwargs['seed'], kwargs['guidance_scale'], kwargs['cloth_guidance_scale'], kwargs['sample_steps'], kwargs['height'], kwargs['width'], image=person_image,mask_image=person_mask,control_image=control_img)
+        images = np.array(images).astype(np.float32) / 255.0
+        images = torch.from_numpy(images)
+        return (images,)
+
 class AnimatediffGenerate:
     @classmethod
     def INPUT_TYPES(s):
@@ -41,6 +112,7 @@ class AnimatediffGenerate:
             "required": {
                 "cloth_image": ("IMAGE",),
                 "prompt": ("STRING", {"default": "a photography of a model"}),
+                "model_path": (find_safetensors_files(checkpoints_path),),
                 "pipe_path": (pipe_path,),
                 "motion_adapter_path": (motion_adapter_path,),
             },
