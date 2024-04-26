@@ -23,6 +23,9 @@ U can contact me thr ![twitter_1](https://github.com/frankchieng/ComfyUI_Aniport
 #### [full-body workflow with IPadapterFaceid](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/assets/fullbody_ipadaterfaceid_workflow.json)
 ![fullbody_ipadapter](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/be180181-3690-4803-a52b-47e6ee1192ab)
 
+#### [cloth inpainting workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/assets/cloth_inpainting_workflow.json)
+![cloth_inpainting](https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/41afc874-bd55-4089-8895-027921a46b44)
+
 #### [AnimateDiff workflow](https://github.com/frankchieng/ComfyUI_MagicClothing/blob/main/assets/magic_clothing_animatediff_workflow.json)
 <div align="left">
     <img src="https://github.com/frankchieng/ComfyUI_MagicClothing/assets/130369523/680f55a0-d4b3-4e85-9c07-86a81e2e5fc9" width="15%">
@@ -42,7 +45,7 @@ pip install -r requirements.txt
  🤗[Huggingface](https://huggingface.co/ShineChen1024/MagicClothing) and place them at the checkpoints directory, If u wanna to run AnimateDiff you should place garment_extractor.safetensors and ip_layer.pth in checkpoints/stable_ckpt directory
 #### you should try the combination of miscellaneous hyperparameters especially when you inference with the lower and full body model,just for experiment now
 > install the [ComfyUI_IPAdapter_plus](https://github.com/cubiq/ComfyUI_IPAdapter_plus) custom node at first if you wanna to experience the ipadapterfaceid.Then download the IPAdapter FaceID models from [IP-Adapter-FaceID](https://huggingface.co/h94/IP-Adapter-FaceID) and place them as the following placement structure
-
+> For cloth inpainting, i just installed the [Segment anything](https://github.com/storyicon/comfyui_segment_anything) node,you can utilize other SOTA model to seg out the cloth from background.
 > #####  tips:If you wanna to run the controlnet openpose part,you have to install the [comfyui_controlnet_aux](https://github.com/Fannovel16/comfyui_controlnet_aux) custome code as well as download the body_pose_model.pth, facenet.pth and hand_pose_model.pth at [openpose models](https://huggingface.co/lllyasviel/Annotators) and place them in custom_nodes/comfyui_controlnet_aux/ckpts/lllyasviel/Annotators
 ```text
 ComfyUI
