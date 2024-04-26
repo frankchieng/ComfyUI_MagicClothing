@@ -1,0 +1,516 @@
+{
+  "last_node_id": 20,
+  "last_link_id": 33,
+  "nodes": [
+    {
+      "id": 7,
+      "type": "SAM Parameters",
+      "pos": [
+        -881,
+        384
+      ],
+      "size": {
+        "0": 315,
+        "1": 82
+      },
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SAM_PARAMETERS",
+          "type": "SAM_PARAMETERS",
+          "links": [
+            8
+          ],
+          "shape": 3,
+          "label": "SAM_PARAMETERS"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SAM Parameters"
+      },
+      "widgets_values": [
+        "[128, 128]; [0, 0]",
+        "[1, 0]"
+      ]
+    },
+    {
+      "id": 1,
+      "type": "SAMModelLoader (segment anything)",
+      "pos": [
+        -876,
+        258
+      ],
+      "size": {
+        "0": 315,
+        "1": 58
+      },
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "SAM_MODEL",
+          "type": "SAM_MODEL",
+          "links": [
+            3
+          ],
+          "shape": 3,
+          "label": "SAM_MODEL",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SAMModelLoader (segment anything)"
+      },
+      "widgets_values": [
+        "sam_vit_h (2.56GB)"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "InvertMask",
+      "pos": [
+        -498,
+        390
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 9,
+          "label": "mask"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            10
+          ],
+          "shape": 3,
+          "label": "MASK",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "InvertMask"
+      }
+    },
+    {
+      "id": 4,
+      "type": "SAM Image Mask",
+      "pos": [
+        -531,
+        257
+      ],
+      "size": {
+        "0": 254.40000915527344,
+        "1": 66
+      },
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "sam_model",
+          "type": "SAM_MODEL",
+          "link": 3,
+          "label": "sam_model"
+        },
+        {
+          "name": "sam_parameters",
+          "type": "SAM_PARAMETERS",
+          "link": 8,
+          "label": "sam_parameters",
+          "slot_index": 1
+        },
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 4,
+          "label": "image",
+          "slot_index": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            9
+          ],
+          "shape": 3,
+          "label": "MASK",
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SAM Image Mask"
+      }
+    },
+    {
+      "id": 6,
+      "type": "PreviewImage",
+      "pos": [
+        -240,
+        259
+      ],
+      "size": {
+        "0": 210,
+        "1": 246
+      },
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 11,
+          "label": "images",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    },
+    {
+      "id": 11,
+      "type": "MaskToImage",
+      "pos": [
+        -513,
+        492
+      ],
+      "size": {
+        "0": 210,
+        "1": 26
+      },
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 10,
+          "label": "mask"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            11,
+            30
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MaskToImage"
+      }
+    },
+    {
+      "id": 5,
+      "type": "LoadImage",
+      "pos": [
+        -877,
+        516
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            4,
+            29
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": null,
+          "shape": 3,
+          "label": "MASK"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "00055_00 (1).jpg",
+        "image"
+      ]
+    },
+    {
+      "id": 13,
+      "type": "LoadImage",
+      "pos": [
+        -872,
+        880
+      ],
+      "size": {
+        "0": 315,
+        "1": 314
+      },
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            31
+          ],
+          "shape": 3,
+          "label": "IMAGE",
+          "slot_index": 0
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            32
+          ],
+          "shape": 3,
+          "label": "MASK",
+          "slot_index": 1
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "clipspace/clipspace-mask-156693.2000002861.png [input]",
+        "image"
+      ]
+    },
+    {
+      "id": 20,
+      "type": "MagicClothing_Inpainting",
+      "pos": [
+        -504,
+        598
+      ],
+      "size": [
+        406.10288314942306,
+        429.5808673708775
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "cloth_image",
+          "type": "IMAGE",
+          "link": 29,
+          "label": "cloth_image"
+        },
+        {
+          "name": "cloth_mask_image",
+          "type": "IMAGE",
+          "link": 30,
+          "label": "cloth_mask_image",
+          "slot_index": 1
+        },
+        {
+          "name": "person_image",
+          "type": "IMAGE",
+          "link": 31,
+          "label": "person_image",
+          "slot_index": 2
+        },
+        {
+          "name": "person_mask",
+          "type": "MASK",
+          "link": 32,
+          "label": "person_mask",
+          "slot_index": 3
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": [
+            33
+          ],
+          "shape": 3,
+          "label": "images",
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "MagicClothing_Inpainting"
+      },
+      "widgets_values": [
+        "magic_clothing_768_vitonhd_joint.safetensors",
+        "a photography of a model",
+        "SG161222/Realistic_Vision_V4.0_noVAE",
+        true,
+        1,
+        "bare, monochrome, lowres, bad anatomy, worst quality, low quality",
+        1415,
+        "randomize",
+        5,
+        2.5,
+        20,
+        768,
+        576
+      ]
+    },
+    {
+      "id": 16,
+      "type": "PreviewImage",
+      "pos": [
+        -58,
+        596
+      ],
+      "size": [
+        390.55097722302503,
+        412.7415836830846
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 33,
+          "label": "images"
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      }
+    }
+  ],
+  "links": [
+    [
+      3,
+      1,
+      0,
+      4,
+      0,
+      "SAM_MODEL"
+    ],
+    [
+      4,
+      5,
+      0,
+      4,
+      2,
+      "IMAGE"
+    ],
+    [
+      8,
+      7,
+      0,
+      4,
+      1,
+      "SAM_PARAMETERS"
+    ],
+    [
+      9,
+      4,
+      1,
+      10,
+      0,
+      "MASK"
+    ],
+    [
+      10,
+      10,
+      0,
+      11,
+      0,
+      "MASK"
+    ],
+    [
+      11,
+      11,
+      0,
+      6,
+      0,
+      "IMAGE"
+    ],
+    [
+      29,
+      5,
+      0,
+      20,
+      0,
+      "IMAGE"
+    ],
+    [
+      30,
+      11,
+      0,
+      20,
+      1,
+      "IMAGE"
+    ],
+    [
+      31,
+      13,
+      0,
+      20,
+      2,
+      "IMAGE"
+    ],
+    [
+      32,
+      13,
+      1,
+      20,
+      3,
+      "MASK"
+    ],
+    [
+      33,
+      20,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {},
+  "version": 0.4
+}
