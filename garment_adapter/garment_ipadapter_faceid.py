@@ -153,7 +153,7 @@ class IPAdapterFaceID:
         self.app.prepare(ctx_id=0, det_size=(640, 640))
 
     def set_seg_model(self, ):
-        checkpoint_path = folder_paths.get_full_path("ckpt", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
+        checkpoint_path = folder_paths.get_full_path("magic_cloth_checkpoint", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
         self.seg_net = load_seg_model(checkpoint_path, device=self.device)
 
     def init_proj(self):
@@ -360,7 +360,7 @@ class IPAdapterFaceIDPlus:
         self.app.prepare(ctx_id=0, det_size=(640, 640))
 
     def set_seg_model(self, ):
-        checkpoint_path = folder_paths.get_full_path("ckpt", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
+        checkpoint_path = folder_paths.get_full_path("magic_cloth_checkpoint", "cloth_segm.pth") #'checkpoints/cloth_segm.pth'
         self.seg_net = load_seg_model(checkpoint_path, device=self.device)
 
     def init_proj(self):

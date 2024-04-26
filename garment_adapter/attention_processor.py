@@ -363,12 +363,14 @@ class REFAttnProcessor2_0(nn.Module):
 
 
 class REFAnimateDiffAttnProcessor2_0(nn.Module):
-    def __init__(self, name, type="read"):
+    def __init__(self, cross_attention_dim, hidden_size, name):
         super().__init__()
         if not hasattr(F, "scaled_dot_product_attention"):
             raise ImportError("AttnProcessor2_0 requires PyTorch 2.0, to use it, please upgrade PyTorch to 2.0.")
         self.name = name
-        self.type = type
+        self.scale = 1.0
+        self.to_k_ip = nn.Linear(cross_attention_dim or hidden_size, hidden_size, bias=False)
+        self.to_v_ip = nn.Linear(cross_attention_dim or hidden_size, hidden_size, bias=False)
 
     def __call__(
             self,
@@ -381,19 +383,17 @@ class REFAnimateDiffAttnProcessor2_0(nn.Module):
             attn_store=None,
             do_classifier_free_guidance=False,
     ) -> torch.FloatTensor:
-        if self.type == "read":
-            attn_store[self.name] = hidden_states
-        elif self.type == "write":
-            ref_hidden_states = attn_store[self.name]
-            if do_classifier_free_guidance:
-                empty_copy = torch.zeros_like(ref_hidden_states)
-                ref_hidden_states = torch.cat([empty_copy, ref_hidden_states, ref_hidden_states])
-            if hidden_states.shape[0] % ref_hidden_states.shape[0] != 0:
-                raise ValueError("not evenly divisible")
-            # ref_hidden_states = ref_hidden_states*1.05
-            hidden_states = torch.cat([hidden_states, ref_hidden_states.repeat(hidden_states.shape[0] // ref_hidden_states.shape[0], 1, 1)], dim=1)
-        else:
-            raise ValueError("unsupport type")
+        ref_hidden_states = attn_store[self.name]
+        if do_classifier_free_guidance:
+            empty_copy = torch.zeros_like(ref_hidden_states)
+            repeat_num = hidden_states.shape[0] // 3
+            ref_hidden_states = torch.cat(
+                [empty_copy.repeat(repeat_num, 1, 1), ref_hidden_states.repeat(repeat_num, 1, 1),
+                 ref_hidden_states.repeat(repeat_num, 1, 1)])
+
+        if hidden_states.shape[0] % ref_hidden_states.shape[0] != 0:
+            raise ValueError("not evenly divisible")
+
         residual = hidden_states
         if attn.spatial_norm is not None:
             hidden_states = attn.spatial_norm(hidden_states, temb)
@@ -445,8 +445,16 @@ class REFAnimateDiffAttnProcessor2_0(nn.Module):
         hidden_states = hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
         hidden_states = hidden_states.to(query.dtype)
 
-        if self.type == "write":
-            hidden_states, _ = torch.chunk(hidden_states, 2, dim=1)
+        ref_key = self.to_k_ip(ref_hidden_states.float()).view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        ref_value = self.to_v_ip(ref_hidden_states.float()).view(batch_size, -1, attn.heads, head_dim).transpose(1, 2)
+        ref_hidden_states = F.scaled_dot_product_attention(
+            query.float(), ref_key, ref_value, attn_mask=None, dropout_p=0.0, is_causal=False
+        )
+
+        ref_hidden_states = ref_hidden_states.transpose(1, 2).reshape(batch_size, -1, attn.heads * head_dim)
+        ref_hidden_states = ref_hidden_states.to(query.dtype)
+
+        hidden_states = hidden_states + self.scale * ref_hidden_states
         # linear proj
         hidden_states = attn.to_out[0](hidden_states, *args)
         # dropout
