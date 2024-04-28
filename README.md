@@ -3,7 +3,7 @@
 - ✅ [2024/04/18] IPAdapter FaceID with human face detection and synthesize with cloth image generation
 - ✅ [2024/04/18] IPAdapter FaceID with controlnet openpose and synthesize with cloth image generation
 - ✅ [2024/04/19] lower-body and full-body models for preliminary experiment
-- ✅ [2024/04/26] AnimateDiff and cloth inpaiting has been supported
+- ✅ [2024/04/26] AnimateDiff and cloth inpaiting have been supported
   
 U can contact me thr ![twitter_1](https://github.com/frankchieng/ComfyUI_Aniportrait/assets/130369523/27b4fcae-e50c-477d-86f4-dacf7fd052f4)[twitter](https://twitter.com/kurtqian) ![wechat_1](https://github.com/frankchieng/ComfyUI_Aniportrait/assets/130369523/b95cd0a2-4188-4eb3-b1de-5f6eeab71045) Weixin：GalaticKing
 
