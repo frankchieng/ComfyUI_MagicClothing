@@ -10,6 +10,6 @@ Repository = "https://github.com/frankchieng/ComfyUI_MagicClothing"
 #  Used by Comfy Registry https://comfyregistry.org
 
 [tool.comfy]
-PublisherId = ""
+PublisherId = "Frank Chieng"
 DisplayName = "ComfyUI_MagicClothing"
 Icon = ""
