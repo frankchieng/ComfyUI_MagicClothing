@@ -172,10 +172,10 @@ class OmsDiffusionControlNetPipeline(StableDiffusionControlNetPipeline):
             negative_prompt,
             prompt_embeds,
             negative_prompt_embeds,
-            controlnet_conditioning_scale,
-            control_guidance_start,
-            control_guidance_end,
-            callback_on_step_end_tensor_inputs,
+            controlnet_conditioning_scale =controlnet_conditioning_scale,
+            control_guidance_start =control_guidance_start,
+            control_guidance_end=control_guidance_end,
+            callback_on_step_end_tensor_inputs =callback_on_step_end_tensor_inputs,
         )
 
         self._guidance_scale = guidance_scale
